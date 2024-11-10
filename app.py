@@ -8,13 +8,14 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import librosa.display
 from keras.models import load_model
+from keras.activations import softmax
 import json
 
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.config['GRAPH_FOLDER'] = 'static/graphs/'
-model = load_model('model.h5') 
+model = load_model('my_model.h5') 
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['GRAPH_FOLDER'], exist_ok=True)
@@ -38,13 +39,19 @@ def extract_features(file_path):
 def predict_species(file_path):
     features = extract_features(file_path)
     prediction = model.predict(features)
-    r_dominica, t_castaneum, s_oryzae = prediction[0]
 
-    # the predicted species
+    # Apply softmax to the output
+    prediction = softmax(prediction)
+
+    r_dominica, t_castaneum, s_oryzae, no_insects = prediction[0].numpy()  # Convert to NumPy array
+
+    # Determine the predicted species
     predicted_species = ''
-    if r_dominica > max(t_castaneum, s_oryzae):
+    if no_insects > max(r_dominica, t_castaneum, s_oryzae):
+        predicted_species = 'No_insects'
+    elif r_dominica > max(t_castaneum, s_oryzae, no_insects):
         predicted_species = 'R_dominica'
-    elif t_castaneum > max(r_dominica, s_oryzae):
+    elif t_castaneum > max(r_dominica, s_oryzae, no_insects):
         predicted_species = 'T_castaneum'
     else:
         predicted_species = 'S_oryzae'
@@ -53,16 +60,17 @@ def predict_species(file_path):
         'r_dominica': round(r_dominica * 100, 1),
         's_oryzae': round(s_oryzae * 100, 1),
         't_castaneum': round(t_castaneum * 100, 1),
+        'no_insects': round(no_insects * 100, 1),
         'predicted_species': predicted_species
     }
 
 # generate bar graph for predictions
 def generate_graph(prediction, filename):
-    species = ['$\it{R\_dominica}$', '$\it{S\_oryzae}$', '$\it{T\_castaneum}$']
-    values = [prediction['s_oryzae'], prediction['r_dominica'], prediction['t_castaneum']]
+    species = ['$\it{R\_dominica}$', '$\it{S\_oryzae}$', '$\it{T\_castaneum}$', 'No_insects']
+    values = [prediction['no_insects'], prediction['s_oryzae'], prediction['t_castaneum'], prediction['r_dominica']]
     
     plt.figure(figsize=(5, 4))
-    plt.bar(species, values, color=['#1F78B4', '#1F78B4', '#1F78B4'])
+    plt.bar(species, values, color=['#1F78B4', '#1F78B4', '#1F78B4', '#1F78B4'])
     plt.ylabel('Prediction (%)')
     plt.title(f'Prediction for {filename}')
     
@@ -132,14 +140,15 @@ def generate_csv():
     results = request.form.getlist('results')[0]  # Get results passed from the form
     results = json.loads(results)  # Load results as JSON
 
-    csv_output = [["File Name", "R_dominica", "S_oryzae", "T_castaneum"]]
+    csv_output = [["File Name", "R_dominica", "S_oryzae", "T_castaneum", "No Insect"]]
     
     for item in results:
         csv_output.append([
             item['filename'],
+            f"{item['result']['no_insects']}%",
             f"{item['result']['s_oryzae']}%",
-            f"{item['result']['r_dominica']}%",
-            f"{item['result']['t_castaneum']}%"
+            f"{item['result']['t_castaneum']}%",
+            f"{item['result']['r_dominica']}%"
         ])
     
     output = '\n'.join(','.join(row) for row in csv_output)

@@ -580,7 +580,7 @@ h6 {
   padding-left: 10px;
 }
 
-.page-title .breadcrumbs ol li+li::before {
+.page-title .breadcrumbs ol li+li::before   {
   content: "/";
   display: inline-block;
   padding-right: 10px;
@@ -889,11 +889,13 @@ section,
   position: absolute;
   inset: 0;
   display: block;
-  width: 100%;
-  height: 100%;
-  /* object-fit: cover; */
+  width: 80%; /* Adjust as needed */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover;
   object-position: center;
   z-index: 1;
+  transform: translateY(8.5rem); 
+  
 }
 
 /*--------------------------------------------------------------
@@ -914,14 +916,14 @@ section,
   padding: 20px 40px;
   max-width: 100%;
   transition: 0.3s;
-  opacity: 0.5;
-  filter: grayscale(100);
+  /* opacity: 0.5; */
+  /* filter: grayscale(100); */
 }
 
-.clients .client-logo img:hover {
+/* .clients .client-logo img:hover {
   filter: none;
   opacity: 1;
-}
+} */
 
 @media (max-width: 640px) {
   .clients .client-logo img {
@@ -932,7 +934,7 @@ section,
 /*--------------------------------------------------------------
 # Features 2 Section
 --------------------------------------------------------------*/
-.features-2 .features-image {
+/* .features-2 .features-image {
   position: relative;
 }
 
@@ -953,8 +955,76 @@ section,
   font-size: 15px;
   color: color-mix(in srgb, var(--default-color), transparent 20%);
   margin: 0;
+} */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;
+  margin: 20px 0;
 }
 
+.features-item-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.features-box {
+  width: 300px;
+  height: 230px;
+  padding: 20px;
+  border: 2px solid #2e8b57;
+  border-radius: 15px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  background-color: #fff;
+}
+
+.features-box:hover {
+  transform: scale(1.1); /* Zoom effect on hover */
+}
+
+.features-box i {
+  font-size: 50px;
+  color: #28a745;
+  margin-bottom: 10px;
+}
+
+.features-box h4 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.features-box p {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: 1fr; 
+  }
+
+  .features-box {
+    width: 150px;
+    height: 150px;
+    padding: 15px;
+  }
+
+  .features-box i {
+    font-size: 40px;
+  }
+
+  .features-box h4 {
+    font-size: 16px;
+  }
+
+  .features-box p {
+    font-size: 12px;
+  }
+}
 /*--------------------------------------------------------------
 # Services Section
 --------------------------------------------------------------*/

@@ -1,0 +1,28 @@
+Before you begin, ensure you have met the following requirements:
+
+- **Visual Studio Code** installed on your machine.
+- **Python** 
+- **Live Server** extension for Visual Studio Code.
+
+## Installation Steps
+
+### 1. Install Visual Studio Code
+
+### 2. Install Python
+
+### 3. Install Live Server Extension
+
+### 4. Install Required Libraries
+Open a terminal and run the following command to install the necessary libraries:
+
+"pip install Flask numpy librosa matplotlib tensorflow soundfile pandas"
+
+
+
+**Running the Application
+
+1. Navigate to the project directory in your terminal.
+
+2. Run the application using the following command:
+
+"python app.py"

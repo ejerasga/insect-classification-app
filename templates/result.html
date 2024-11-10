@@ -30,9 +30,10 @@
         {% for item in results %}
         <div class="file-result">
             <h2>File: {{ item.filename }}</h2>
-            <p><strong><em>R_dominica:</em></strong> {{ item.result['s_oryzae'] }}%</p>
-            <p><strong><em>S_oryzae:</em></strong> {{ item.result['r_dominica'] }}%</p>
+            <p><strong><em>R_dominica:</em></strong> {{ item.result['no_insects'] }}%</p>
+            <p><strong><em>S_oryzae:</em></strong> {{ item.result['s_oryzae'] }}%</p>
             <p><strong><em>T_castaneum:</em></strong> {{ item.result['t_castaneum'] }}%</p>
+            <p><strong><em>No_insects:</em></strong> {{ item.result['r_dominica'] }}%</p>
             
             <div class="graphs">
                 <div>
@@ -42,15 +43,16 @@
                 <div>
                     <h3>Predicted Insect</h3>
                     {% if item.result['predicted_species'] == 'S_oryzae' %}
-                        <img src="{{ url_for('static', filename='resources/insects/Rhyzopertha dominica.jpg') }}" alt="Rhyzopertha dominica" onclick="toggleSound('sound_S_oryzae')">
+                        <img src="{{ url_for('static', filename='resources/insects/Sitophilus oryzae.jpg') }}" alt="Rhyzopertha dominica" onclick="toggleSound('sound_S_oryzae')">
                         <audio id="sound_S_oryzae" src="{{ url_for('static', filename='resources/insect_sounds/R_dominica.wav') }}"></audio>
                     {% elif item.result['predicted_species'] == 'R_dominica' %}
-                        <img src="{{ url_for('static', filename='resources/insects/Sitophilus oryzae.jpg') }}" alt="Sitophilus oryzae" onclick="toggleSound('sound_R_dominica')">
+                        <img src="{{ url_for('static', filename='resources/insects/no_insects.jpg') }}" alt="Sitophilus oryzae" onclick="toggleSound('sound_R_dominica')">
                         <audio id="sound_R_dominica" src="{{ url_for('static', filename='resources/insect_sounds/S_oryzae.wav') }}"></audio>
                     {% elif item.result['predicted_species'] == 'T_castaneum' %}
                         <img src="{{ url_for('static', filename='resources/insects/Tribolium castaneum.jpg') }}" alt="Tribolium castaneum" onclick="toggleSound('sound_T_castaneum')">
                         <audio id="sound_T_castaneum" src="{{ url_for('static', filename='resources/insect_sounds/T_castaneum.wav') }}"></audio>
-                    {% endif %}
+                        {% elif item.result['predicted_species'] == 'No_insects' %}
+                        <img src="{{ url_for('static', filename='resources/insects/Rhyzopertha dominica.jpg') }}" alt="No Insects Detected">                    {% endif %}
                 </div>
             </div>
         </div>
